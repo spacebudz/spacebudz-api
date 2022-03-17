@@ -22,7 +22,9 @@ type Activity = {
 
 type Trade = { owner: string; amount: BigInt; slot: number };
 
-type Sale = { amount: BigInt; slot: number };
+type History = { amount: BigInt; slot: number };
+
+type TopSale = { amount: BigInt; slot: number; budId: number };
 
 type Version = 'v1' | 'v2';
 
@@ -34,7 +36,7 @@ type SpaceBud = {
         listing?: Trade;
       };
     };
-    history?: Sale[];
+    history?: History[];
   };
 };
 
@@ -43,7 +45,7 @@ export type Schema = {
   point: Point;
   hash: string;
   activity: Activity[];
-  topSales: Sale[];
+  topSales: TopSale[];
   totalVolume: BigInt;
   totalSales: number;
 };

@@ -179,6 +179,7 @@ const setSpaceBudLastSale = ({
     db.topSales.push({
       slot,
       amount,
+      budId,
     });
     db.topSales.sort((a, b) =>
       a.amount < b.amount ? 1 : a.amount > b.amount ? -1 : 0,
@@ -187,7 +188,7 @@ const setSpaceBudLastSale = ({
     const reverseTopSales = [...db.topSales].reverse();
     const index = reverseTopSales.findIndex((sale) => sale.amount < amount);
     if (index !== -1) {
-      reverseTopSales[index] = { slot, amount };
+      reverseTopSales[index] = { slot, amount, budId };
       reverseTopSales.sort((a, b) =>
         a.amount < b.amount ? 1 : a.amount > b.amount ? -1 : 0,
       ); // sort amount in DESC order
