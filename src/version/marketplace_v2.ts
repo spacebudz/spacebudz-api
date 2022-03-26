@@ -18,11 +18,11 @@ const SPACEBUDZ_POLICY =
 const START_BID_HASH =
   'f7f2f57c58b5e4872201ab678928b0d63935e82d022d385e1bad5bfe347e89d8';
 
-const REDEEMER = {
-  Buy: { data: '2GaCAIA=', type: 0 },
-  Sell: { data: '2GaCAYA=', type: 1 },
-  Cancel: { data: '2GaCA4A=', type: 3 },
-};
+enum REDEEMER {
+  Buy = 0,
+  Sell = 1,
+  Cancel = 3,
+}
 
 const DATUM_LABEL = 405;
 const ADDRESS_LABEL = 406;
@@ -70,16 +70,21 @@ const getTradeDetails = (
 const getAddress = (addressHex: string): string =>
   S.Address.from_bytes(Buffer.from(addressHex, 'hex')).to_bech32();
 
-const getRedeemers = (transaction) => {
+const getRedeemers = (transaction): REDEEMER[] => {
   const redeemers = transaction.witness.redeemers;
   const result = [];
   if (!transaction.witness.scripts[SCRIPT_HASH]) return [];
   for (const index in redeemers) {
     const redeemer = redeemers[index].redeemer;
-    if (redeemer == REDEEMER.Sell.data) result.push(REDEEMER.Sell.type);
-    else if (redeemer == REDEEMER.Buy.data) result.push(REDEEMER.Buy.type);
-    else if (redeemer == REDEEMER.Cancel.data)
-      result.push(REDEEMER.Cancel.type);
+    const redeemerType = parseInt(
+      S.PlutusData.from_bytes(Buffer.from(redeemer, 'base64'))
+        .as_constr_plutus_data()
+        .alternative()
+        .to_str(),
+    );
+    if (redeemerType === REDEEMER.Sell) result.push(REDEEMER.Sell);
+    else if (redeemerType === REDEEMER.Buy) result.push(REDEEMER.Buy);
+    else if (redeemerType === REDEEMER.Cancel) result.push(REDEEMER.Cancel);
   }
   return result;
 };
@@ -257,7 +262,7 @@ export const marketplaceV2 = (
     // check for sales and cancelling
     const redeemers = getRedeemers(transaction);
     redeemers.forEach((redeemer) => {
-      if (redeemer == REDEEMER.Buy.type) {
+      if (redeemer === REDEEMER.Buy) {
         const tradeDetails = getDatum(transaction, DATUM_TYPE.Listing);
         setSpaceBudLastSale({
           db,
@@ -265,7 +270,7 @@ export const marketplaceV2 = (
           type: DATUM_TYPE.Listing,
           slot: point.slot,
         });
-      } else if (redeemer == REDEEMER.Sell.type) {
+      } else if (redeemer === REDEEMER.Sell) {
         const tradeDetails = getDatum(transaction, DATUM_TYPE.Bid);
         setSpaceBudLastSale({
           db,
@@ -273,7 +278,7 @@ export const marketplaceV2 = (
           type: DATUM_TYPE.Bid,
           slot: point.slot,
         });
-      } else if (redeemer == REDEEMER.Cancel.type) {
+      } else if (redeemer === REDEEMER.Cancel) {
         let tradeDetails = getDatum(transaction, DATUM_TYPE.Bid);
         if (tradeDetails) {
           setSpaceBudCancel({
