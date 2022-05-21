@@ -38,6 +38,7 @@
     "@cardano-ogmios/schema": "^5.2.0",
     "@emurgo/cardano-serialization-lib-nodejs": "^10.0.4",
     "@types/ws": "^8.5.3",
+    "firebase-admin": "^10.0.2",
     "json-bigint": "^1.0.0",
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",

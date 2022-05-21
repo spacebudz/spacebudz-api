@@ -237,13 +237,12 @@ export const marketplaceV2 = (
   const transactions = block.body;
   transactions.forEach((transaction) => {
     const outputs = transaction.body.outputs;
-    const metadata = transaction.metadata && transaction.metadata.body.blob;
+    const metadata = transaction.metadata?.body?.blob;
     const contractOutputs = filterIndexAndContent(
       outputs,
       (output) =>
-        metadata &&
-        metadata[DATUM_LABEL] &&
-        metadata[ADDRESS_LABEL] &&
+        metadata?.[DATUM_LABEL] &&
+        metadata?.[ADDRESS_LABEL] &&
         output.address === CONTRACT_ADDRESS &&
         output.datum !== START_BID_HASH &&
         Object.keys(output.value.assets).some(
