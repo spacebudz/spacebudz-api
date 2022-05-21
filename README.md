@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100px" src="https://github.com/SpaceBudz/spacebudz/raw/main/src/images/brand/logo.png" align="center" alt="GitHub Readme Stats" />
+  <img width="100px" src="https://github.com/SpaceBudz/spacebudz/raw/main/src/images/brand/logo.png" align="center" />
   <h1 align="center">SpaceBudz API</h1>
   <p align="center">The SpaceBudz API retrieves on-chain data from the marketplace. <a href="https://ogmios.dev/">Ogmios</a> is used to sync blocks from the chain and extracts all relevant data from blocks.</p>
 
