@@ -31,3 +31,5 @@ build/
 # db
 
 /db
+
+key.js
